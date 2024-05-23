@@ -5,35 +5,102 @@ const { BinarySearchTree, TreeNode } = require('./binary-search-tree.js');
 // Practice problems on binary trees
 
 function findMinBST (rootNode) {
-  // Your code here 
+  // check if rootNode.left has a left node ; recursion until flasey, gives min
+  //if (!rootNode.left) return
+
+  if (rootNode.left){
+    return findMinBST(rootNode.left)
+  }
+  return rootNode.val
 }
 
 function findMaxBST (rootNode) {
-  // Your code here 
+  // check right
+  if (rootNode.right){
+    return findMaxBST(rootNode.right)
+  }
+  return rootNode.val
 }
 
 function findMinBT (rootNode) {
-  // Your code here 
+  let min = rootNode.val
+  if (rootNode.left){
+    min = Math.min(min, findMinBT(rootNode.left))
+  }
+  if (rootNode.right){
+    min = Math.min(min, findMinBT(rootNode.right))
+  }
+  return min
 }
 
 function findMaxBT (rootNode) {
-  // Your code here 
+  let max = rootNode.val
+  if(rootNode.left){
+    max = Math.max(max, findMaxBT(rootNode.left))
+  }
+  if(rootNode.right){
+    max = Math.max(max, findMaxBT(rootNode.right))
+  }
+  return max
 }
 
 function getHeight (rootNode) {
-  // Your code here 
+  if (!rootNode) return -1
+  if (!rootNode.left && !rootNode.right) return 0
+  
+  return 1 + Math.max(getHeight(rootNode.left), getHeight(rootNode.right))
+  // add 1 to answer becuase rootNode not added
 }
 
 function balancedTree (rootNode) {
-  // Your code here 
+  if (!rootNode) return true 
+  let leftHeight = getHeight(rootNode.left)
+  let rightHeight = getHeight(rootNode.right)
+  return (Math.abs(leftHeight - rightHeight) <= 1 && balancedTree(rootNode.left) && balancedTree(rootNode.right))
 }
 
 function countNodes (rootNode) {
-  // Your code here 
+  const queue = [rootNode]
+  let counter = 0;
+
+  while(queue.length){
+    let currNode = queue.shift()
+    counter++
+    if (currNode.left) {
+      queue.push(currNode.left)
+    }
+    if (currNode.right) {
+      queue.push(currNode.right)
+    }
+  }
+  return counter 
 }
 
 function getParentNode (rootNode, target) {
-  // Your code here 
+  
+  if (rootNode.val === target) return null
+
+  const queue = [rootNode]
+  while(queue.length){
+    let currNode = queue.shift()
+    if(currNode.left === target){
+      return currNode
+    }
+    if(currNode.right === target){
+      return currNode
+    }
+    // if the node has a left node
+    // push the left node on the back of the queue
+    if (currNode.left) {
+      queue.push(currNode.left)
+    }
+    // if the node has a right node
+    // push the right node on the back of the queue
+    if (currNode.right) {
+      queue.push(currNode.right)
+    }
+  }
+  return undefined
 }
 
 function inOrderPredecessor (rootNode, target) {

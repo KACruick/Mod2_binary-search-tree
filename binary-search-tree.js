@@ -142,3 +142,5 @@ class TreeNode {
       }
     }
   }
+
+  module.exports = { BinarySearchTree, TreeNode };
