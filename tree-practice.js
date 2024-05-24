@@ -77,18 +77,19 @@ function countNodes (rootNode) {
 }
 
 function getParentNode (rootNode, target) {
-  
+
   if (rootNode.val === target) return null
 
   const queue = [rootNode]
+ 
   while(queue.length){
-    let currNode = queue.shift()
-    if(currNode.left === target){
+    let currNode = queue.shift()    //while queue isn't empty, remove node 
+
+    //checking if left and right nodes exist AND then compares node.val to target 
+    if(currNode.left && currNode.left.val === target || currNode.right && currNode.right.val === target){
       return currNode
     }
-    if(currNode.right === target){
-      return currNode
-    }
+    
     // if the node has a left node
     // push the left node on the back of the queue
     if (currNode.left) {
@@ -99,20 +100,97 @@ function getParentNode (rootNode, target) {
     if (currNode.right) {
       queue.push(currNode.right)
     }
+    
   }
-  return undefined
+
 }
 
-function inOrderPredecessor (rootNode, target) {
-  // Your code here 
+function inOrderPredecessor (rootNode, target, array = []) {
+
+  if (!rootNode) return 
+ 
+  inOrderPredecessor(rootNode.left, target, array)
+  
+  array.push(rootNode.val)
+  inOrderPredecessor(rootNode.right, target, array)
+
+
+  let index = array.indexOf(target)
+  if (array[0] === target) return null
+  return array[index-1]
 }
 
-function deleteNodeBST(rootNode, target) {
+
+    //      4
+    //    /   \
+    //   2     6
+    //  / \   / \
+    // 1   3 5   7
+//     bstRoot = new TreeNode(4);
+//     bstRoot.left = new TreeNode(2);
+//     bstRoot.left.left = new TreeNode(1);
+//     bstRoot.left.right = new TreeNode(3);
+//     bstRoot.right = new TreeNode(6);
+//     bstRoot.right.left = new TreeNode(5);
+//     bstRoot.right.right = new TreeNode(7);
+
+// console.log(inOrderPredecessor(bstRoot, 4))
+
+
+
+function deleteNodeBST(rootNode, target, array = []) {
   // Do a traversal to find the node. Keep track of the parent
 
-  // Undefined if the target cannot be found
+  // if (!rootNode) return 
+  // deleteNodeBST(rootNode.left, target, array)
+  // array.push(rootNode.val)
+  // deleteNodeBST(rootNode.right, target, array)
+
+
+  // let index = array.indexOf(target)
+  // if(index === -1) return undefined   // Undefined if the target cannot be found
+  // if (array[0] === target) return null
+  // let predecessor = array[index-1]
+  //let successor = array[index+1]
 
   // Set target based on parent
+  
+    if (!rootNode) {
+      return null;
+    }
+
+    if(target == rootNode.val) {
+      if (!rootNode.left && !rootNode.right) {
+        return null;
+      }
+
+      if (!rootNode.left) {
+        return rootNode.right;
+      }
+
+      if (!rootNode.right) {
+        return rootNode.left;
+      }
+
+      let temp = rootNode.right; //
+
+      while(temp.left) {    //there was a ! in front of temp
+        temp = temp.left;
+      }
+
+      rootNode.val = temp.val;
+
+      rootNode.right = deleteNodeBST(rootNode.right, temp.val);  //
+
+    } else if (target < rootNode.val) {
+      rootNode.left = deleteNodeBST(rootNode.left, target);
+      return rootNode;
+
+    } else if (target > rootNode.val) {
+      rootNode.right = deleteNodeBST(rootNode.right, target);
+      return rootNode;
+    } else return
+  
 
   // Case 0: Zero children and no parent:
   //   return null
